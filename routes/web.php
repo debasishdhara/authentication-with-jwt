@@ -20,3 +20,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/permissiondenie', function () {
+    return view('errors.403');
+})->name('permission-error');

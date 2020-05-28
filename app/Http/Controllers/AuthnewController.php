@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTFactory;
+use App\Http\Resources\User as UserResource;
+use App\User;
 
 class AuthnewController extends Controller
 {
@@ -30,12 +34,17 @@ class AuthnewController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if ($token = auth('api')->attempt($credentials)) {
-
+        if ($token = JWTAuth::attempt($credentials)) {
             return $this->respondWithToken($token);
         }
-
-        return response()->json(['error' => 'Unauthorized'], 401);
+        //['error' => 'Unauthorized'], 401
+        return response()->json([
+            "serverResponse" => [
+                "code" => 401,
+                "message" => "Unauthorized User",
+                "isSuccess" => false
+            ]
+            ]);
     }
 
     /**
@@ -45,7 +54,64 @@ class AuthnewController extends Controller
      */
     public function me()
     {
-        return response()->json(auth('api')->user());
+        try {
+
+                    if (! $user = JWTAuth::parseToken()->authenticate()) {
+                        //['user_not_found'], 404
+                            return response()->json([
+                                "serverResponse" => [
+                                    "code" => 404,
+                                    "message" => "User Not Found",
+                                    "isSuccess" => false
+                                ]
+                                ]);
+                    }
+
+            } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+                // ['token_expired'], 
+                    return response()->json([
+                        "serverResponse" => [
+                            "code" => $e->getStatusCode(),
+                            "message" => "User Token Expired",
+                            "isSuccess" => false
+                        ]
+                        ]);
+
+            } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+                    //['token_invalid'], $e->getStatusCode()
+                    return response()->json([
+                        "serverResponse" => [
+                            "code" => $e->getStatusCode(),
+                            "message" => "Token Invalid",
+                            "isSuccess" => false
+                        ]
+                        ]);
+
+            } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+                    // ['token_absent'], $e->getStatusCode()
+                    return response()->json([
+                        "serverResponse" => [
+                            "code" => $e->getStatusCode(),
+                            "message" => "Token Not Found",
+                            "isSuccess" => false
+                        ]
+                        ]);
+
+            }
+
+            $userdetails= User::with('roles')->find($user->id);
+            //compact('userdetails')
+            return response()->json([
+                "serverResponse" => [
+                    "code" => 200,
+                    "message" => "User Details Fetched Successfully",
+                    "isSuccess" => true
+                ],
+                "result" => [
+                    "User Details" =>new UserResource($userdetails)
+                ]
+            ]);
+        
     }
 
     /**
@@ -56,8 +122,14 @@ class AuthnewController extends Controller
     public function logout()
     {
         auth('api')->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
+//['message' => 'Successfully logged out']
+        return response()->json([
+            "serverResponse" => [
+                "code" => 200,
+                "message" => "Successfully logged out",
+                "isSuccess" => true
+            ]
+            ]);
     }
 
     /**
@@ -67,7 +139,7 @@ class AuthnewController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth('api')->refresh());
+        return $this->respondWithToken(JWTAuth::refresh());
     }
 
     /**
@@ -79,10 +151,55 @@ class AuthnewController extends Controller
      */
     protected function respondWithToken($token)
     {
+        $userdetails= User::with('roles')->find(Auth::user()->id);
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
+            "serverResponse" => [
+                "code" => 200,
+                "message" => "User Details Fetched Successfully",
+                "isSuccess" => true
+            ],
+            "result" => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                "User Details" =>new UserResource($userdetails),
+                'expires_in' => JWTAuth::factory()->getTTL() * 1
+            ]
+        ]);
+    }
+
+    public function register(Request $request)
+    {
+            $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        if($validator->fails()){
+                return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::create([
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+        ]);
+
+        $token = JWTAuth::fromUser($user);
+        $userdetails= User::with('roles')->find($user->id);
+//compact('user','token'),201
+        return response()->json([
+            "serverResponse" => [
+                "code" => 200,
+                "message" => "User Created Successfully",
+                "isSuccess" => true
+            ],
+            "result" => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                "User Details" => new UserResource($userdetails),
+                'expires_in' => JWTAuth::factory()->getTTL() * 1
+            ]
         ]);
     }
 }
