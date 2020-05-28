@@ -24,6 +24,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/custom-theme.scss",
               "src/styles.css"
             ],
             "scripts": []
@@ -119,6 +120,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "basicauth"
+    }
+  },
+  "defaultProject": "basicauth",
+  "cli": {
+    "analytics": "3de6cf3b-7863-4e50-ace8-d83180602ac4"
+  }
 }
