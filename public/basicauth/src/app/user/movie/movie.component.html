@@ -1,5 +1,6 @@
 <div class="mat-elevation-z8">
   <!--  -->
+  <button  mat-raised-button color="primary" (click)="add()">Add</button>
   <table class="">
     <thead>
     <th>Movie Name</th>
@@ -12,7 +13,10 @@
       <td>{{data.movie_name}}</td>
       <td>{{data.movie_description}}</td>
       <td><img mat-card-image [src]="data.images" alt="Photo of Poster" width="100" height="100"/></td>
-      <td><button mat-button color="primary" (click)="edit(data.id)"><mat-icon>launch</mat-icon></button><button mat-button color="warn"  (click)="deleten(data.id)"><mat-icon>restore_from_trash</mat-icon></button></td>
+      <td>
+        <button mat-raised-button color="primary" (click)="edit(data.id)"><mat-icon>launch</mat-icon></button>
+        <button mat-raised-button color="warn"  (click)="deleten(data.id)"><mat-icon>restore_from_trash</mat-icon></button>
+      </td>
     </tr>
   </tbody>
   </table>

@@ -39,4 +39,17 @@ export class MovieService {
     const headers = headerDict;
     return this.http.get(`${environment.apiUrl}api/movies`,{headers}).pipe(map((res)=>{ return res;}));
   }
+
+  newmovieentry(data){
+    const userdetails = localStorage.getItem('currentUser');
+    const userjson =JSON.parse(userdetails);
+    const res =userjson?userjson.result.token_type:"";
+    const resto =userjson?userjson.result.access_token:"";
+    const headerDict = {
+      'Accept': 'application/json',
+      'Authorization':res+" "+resto
+    }
+    const headers = headerDict;
+    return this.http.post(`${environment.apiUrl}api/moviecreate`,data,{headers}).pipe(map((res)=>{ return res;}));
+  }
 }

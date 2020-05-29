@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MovieService } from '../movie.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-movie',
@@ -8,7 +9,7 @@ import { MovieService } from '../movie.service';
 })
 export class MovieComponent implements OnInit {
   dataSource: any;
-  constructor(private movieService:MovieService){
+  constructor(private movieService:MovieService,private router:Router){
 
   }
   ngOnInit() {
@@ -18,9 +19,12 @@ export class MovieComponent implements OnInit {
   }
 
   edit(i){
-
+      this.router.navigate(['user/movieedit'], { queryParams: { id: i } });
   }
   deleten(i){
     
+  }
+  add(){
+    this.router.navigate(['user/moviecreate']);
   }
 }

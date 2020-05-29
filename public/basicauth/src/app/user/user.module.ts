@@ -8,16 +8,21 @@ import { MovieComponent } from './movie/movie.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MovieaddComponent } from './movieadd/movieadd.component';
+import { MovieeditComponent } from './movieedit/movieedit.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [UserlistComponent, MovieComponent],
+  declarations: [UserlistComponent, MovieComponent, MovieaddComponent, MovieeditComponent],
   imports: [
     CommonModule,
     UserRoutingModule,
     MatallModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class UserModule { }
