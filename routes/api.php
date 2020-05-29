@@ -19,8 +19,30 @@ use Illuminate\Support\Facades\Route;
 // });
 // API Login & Register Route
 Route::post('login', 'AuthnewController@login')->name('api-login');
+Route::post('register', 'AuthnewController@register')->name('api-register');
+Route::post('logout', 'AuthnewController@logout');
+
 Route::middleware('auth:api')->group(function () {
-    Route::post('logout', 'AuthnewController@logout');
     Route::post('refresh', 'AuthnewController@refresh');
     Route::post('me', 'AuthnewController@me');
+});
+
+/** Admin */
+Route::group(['middleware' => ['auth:api','admin']], function () {
+    /** Dashboard*/
+    /** Admin Folder Access */
+    Route::namespace('Admin')->group(function () {
+        Route::post('/moviecreate', 'AdminController@createMovie')->name('create-api-movie');
+        Route::post('/movieedit/{id}', 'AdminController@editMovie')->name('edit-api-movie');
+        Route::delete('/movieedit/{id}', 'AdminController@deleteMovie')->name('edit-api-movie');
+        Route::get('/movielist', 'AdminController@showMovielist')->name('list-api-movie');
+    });
+});
+/** User */
+Route::group(['middleware' => ['auth:api','user']], function () {
+     /** Dashboard*/
+    /** User Folder Access */
+    Route::namespace('User')->group(function () {
+        Route::get('/movies', 'UserController@showMovie')->name('api-movie-show');
+    });
 });

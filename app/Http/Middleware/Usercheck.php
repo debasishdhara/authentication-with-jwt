@@ -17,8 +17,19 @@ class Usercheck
     public function handle($request, Closure $next)
     {
         if (Auth::check()) {
-            if(!(Auth::user()->roles->pluck('type')->contains('USER')))
-                return redirect('/permissiondenie');
+            if(!(Auth::user()->roles->pluck('type')->contains('USER'))){
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        "serverResponse" => [
+                            "code" => 200,
+                            "message" => "Permission Denied",
+                            "isSuccess" => false
+                        ]
+                        ]);
+                }else{
+                    return redirect('/permissiondenie');
+                }
+            }
         }
         return $next($request);
     }

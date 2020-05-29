@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 
-import { AuthService } from './auth.service';
+import { LoginService } from './login/login.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AdminService } from './service/admin.service';
+import { UserService } from './service/user.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -9,15 +12,31 @@ import { AuthService } from './auth.service';
 export class AppComponent {
   title = 'basicauth';
   isAuthenticated: boolean;
-  constructor(public authService: AuthService) {
-        this.authService.isAuthenticated.subscribe(
+  isAdmin:boolean;
+  isUser:boolean;
+  constructor(public loginService: LoginService,public userService:UserService,public adminService: AdminService,private route: ActivatedRoute,private router: Router) {
+        this.loginService.isAuthenticated.subscribe(
           (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
+        );
+        this.loginService.isAdmin.subscribe(
+          (isAdmin: boolean)  => this.isAdmin = isAdmin
+        );
+        this.loginService.isUser.subscribe(
+          (isUser: boolean)  => this.isUser = isUser
         );
   }
   async ngOnInit() {
-        this.isAuthenticated = await this.authService.checkAuthenticated();
+        await this.loginService.checkAuthenticated().subscribe(
+          res => {
+            this.isAuthenticated = res;
+          }
+        );
+
+        this.isAdmin = this.adminService.checkAdmin();
+        this.isUser = this.userService.checkUser();
   }
   logout() {
-        this.authService.logout('/');
+        this.loginService.logout();
+        this.router.navigate(["/"]);
       }
 }

@@ -18,7 +18,19 @@ class Admincheck
     {
         if (Auth::check()) {
             if(!(Auth::user()->roles->pluck('type')->contains('ADMIN')))
-                return redirect('/permissiondenie');
+            {
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        "serverResponse" => [
+                            "code" => 200,
+                            "message" => "Permission Denied",
+                            "isSuccess" => false
+                        ]
+                        ]);
+                }else{
+                    return redirect('/permissiondenie');
+                }
+            }
         }
         return $next($request);
     }

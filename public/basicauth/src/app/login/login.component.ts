@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../auth.service';
 import { LoginService } from './login.service';
 
 @Component({
@@ -19,7 +18,6 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService,
     private loginService:LoginService,
   ) {
   }
@@ -30,10 +28,11 @@ export class LoginComponent implements OnInit {
       username: ['', Validators.email],
       password: ['', Validators.required]
     });
-
-    if (await this.authService.checkAuthenticated()) {
-      await this.router.navigate([this.returnUrl]);
-    }
+    await this.loginService.checkAuthenticated().subscribe(res=>{
+      if (res) {
+        this.router.navigate([this.returnUrl]);
+      }
+    });
   }
 
   async onSubmit() {
@@ -45,7 +44,7 @@ export class LoginComponent implements OnInit {
         const password = this.form.get('password').value;
         await this.loginService.login(username, password).subscribe(
           res => {
-            console.log(res);
+            this.router.navigate(['user']);
           },
           err => {
               

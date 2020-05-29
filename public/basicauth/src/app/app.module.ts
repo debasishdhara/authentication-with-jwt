@@ -10,11 +10,13 @@ import { MatallModule } from './matall/matall.module';
 import { HttpClientModule } from '@angular/common/http';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SignupComponent } from './signup/signup.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    NotfoundComponent
+    NotfoundComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,

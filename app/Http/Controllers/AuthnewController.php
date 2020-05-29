@@ -8,6 +8,13 @@ use App\Http\Controllers\Controller;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 use App\Http\Resources\User as UserResource;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 use App\User;
 
 class AuthnewController extends Controller
@@ -20,7 +27,7 @@ class AuthnewController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['api-login','login']]);
+        $this->middleware('auth:api', ['except' => ['api-login','login','register']]);
     }
 
     /**
@@ -108,7 +115,7 @@ class AuthnewController extends Controller
                     "isSuccess" => true
                 ],
                 "result" => [
-                    "User Details" =>new UserResource($userdetails)
+                    "user_details" =>new UserResource($userdetails)
                 ]
             ]);
         
@@ -161,7 +168,7 @@ class AuthnewController extends Controller
             "result" => [
                 'access_token' => $token,
                 'token_type' => 'bearer',
-                "User Details" =>new UserResource($userdetails),
+                "user_details" =>new UserResource($userdetails),
                 'expires_in' => JWTAuth::factory()->getTTL() * 1
             ]
         ]);
@@ -171,20 +178,27 @@ class AuthnewController extends Controller
     {
             $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'phone' => 'string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         if($validator->fails()){
-                return response()->json($validator->errors()->toJson(), 400);
+                return response()->json([
+                    "serverResponse" => [
+                        "code" => 201,
+                        "message" => $validator->errors(),
+                        "isSuccess" => false
+                    ]]);
         }
 
         $user = User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
+            'phone' => $request->get('phone'),
             'password' => Hash::make($request->get('password')),
         ]);
-
+        $user->roles()->sync([2]);
         $token = JWTAuth::fromUser($user);
         $userdetails= User::with('roles')->find($user->id);
 //compact('user','token'),201
@@ -197,7 +211,7 @@ class AuthnewController extends Controller
             "result" => [
                 'access_token' => $token,
                 'token_type' => 'bearer',
-                "User Details" => new UserResource($userdetails),
+                "user_details" => new UserResource($userdetails),
                 'expires_in' => JWTAuth::factory()->getTTL() * 1
             ]
         ]);
