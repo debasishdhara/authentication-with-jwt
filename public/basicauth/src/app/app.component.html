@@ -39,6 +39,13 @@
       Movies
   
     </button>
+    <button mat-button fxHide="false" fxHide.gt-sm routerLink="/subuser/watchmovies" *ngIf="isAuthenticated">
+  
+      <mat-icon>description</mat-icon>
+  
+      Watch Movies Details
+  
+    </button>
     <button mat-button *ngIf="isAuthenticated" (click)="logout()">
   
       <mat-icon>exit_to_app</mat-icon>
@@ -48,11 +55,11 @@
     </button>
     </div>
   
-    <button mat-button [mat-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
+    <!-- <button mat-button [mat-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
   
       <mat-icon>menu</mat-icon>
   
-    </button>
+    </button> -->
     
   </mat-toolbar>
   

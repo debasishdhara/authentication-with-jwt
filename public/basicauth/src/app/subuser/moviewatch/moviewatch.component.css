@@ -1,0 +1,11 @@
+
+.example-card {
+    max-width: 400px;
+    padding: 5px 21px;
+    margin: 16px;
+    float: left;
+  }
+  
+  .example-header-image {
+    background-size: cover;
+  }

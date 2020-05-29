@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\MoviesResource;
 use Carbon\Carbon;
 use App\Movie;
 
@@ -55,12 +56,13 @@ class AdminController extends Controller
                 $movie_name=$request->input('movie_name');
                 $movie_description=$request->input('movie_description');
                 $movie_poster = $request->file('movie_poster')->storeAs(
-                    'public/moives', time().'.jpg'
+                    'moives', time().'.jpg'
                 );
                 $moviedetails = new Movie();
                 $moviedetails->movie_name=$movie_name;
                 $moviedetails->movie_description=$movie_description;
                 $moviedetails->movie_poster=$movie_poster;
+                $moviedetails->active=true;
                 $moviedetails->save();
                 
                 DB::commit();
@@ -91,6 +93,17 @@ class AdminController extends Controller
     }
 
     public function showMovielist(){
+        $movies = Movie::all();
+        return response()->json([
+            "serverResponse" => [
+                "code" => 200,
+                "message" => "Movies Fetched Successfully",
+                "isSuccess" => true
+            ],
+            "result" => [
+                "movies" => MoviesResource::collection($movies)
+            ]
+            ]);
 
     }
 
