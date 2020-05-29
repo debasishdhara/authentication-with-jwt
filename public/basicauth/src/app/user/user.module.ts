@@ -3,15 +3,21 @@ import { CommonModule } from '@angular/common';
 
 import { UserRoutingModule } from './user-routing.module';
 import { UserlistComponent } from './userlist/userlist.component';
-import { MovielistComponent } from './movielist/movielist.component';
 import { MatallModule } from '../matall/matall.module';
+import { MovieComponent } from './movie/movie.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
-  declarations: [UserlistComponent, MovielistComponent],
+  declarations: [UserlistComponent, MovieComponent],
   imports: [
     CommonModule,
     UserRoutingModule,
-    MatallModule
+    MatallModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ]
 })
 export class UserModule { }
