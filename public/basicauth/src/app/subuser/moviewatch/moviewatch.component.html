@@ -1,12 +1,12 @@
 <mat-card class="example-card mat-toolbar-multiple-rows mat-calendar-body-selected" *ngFor="let movie of movies">
     <mat-card-header>
       <!-- <div mat-card-avatar class="example-header-image"></div> -->
-      <mat-card-title>Movie Name</mat-card-title>
+      <mat-card-title>{{movie.movie_name}}</mat-card-title>
     </mat-card-header>
-    <img mat-card-image [src]="movie.movieurl" alt="Photo of Poster">
+    <img mat-card-image [src]="movie.images" alt="Photo of Poster">
     <mat-card-content>
       <p>
-        Movie Description
+        {{movie.movie_description}}
       </p>
     </mat-card-content>
     <!-- <mat-card-actions>

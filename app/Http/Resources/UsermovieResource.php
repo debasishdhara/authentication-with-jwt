@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-class MoviesResource extends JsonResource
+class UsermovieResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,6 @@ class MoviesResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=> $this->id,
             'movie_name' => $this->movie_name,
             'images' => Storage::disk(env('FILESYSTEM_DRIVER', 'public'))->exists($this->movie_poster) ? Storage::disk(env('FILESYSTEM_DRIVER', 'public'))->url($this->movie_poster) : asset('images/no-image.png'),
             'movie_description' => $this->movie_description

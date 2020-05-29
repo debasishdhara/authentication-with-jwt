@@ -39,7 +39,7 @@ Route::group(['middleware' => ['auth:api','admin']], function () {
     });
 });
 /** User */
-Route::group(['middleware' => ['auth:api','user']], function () {
+Route::group(['middleware' => ['auth:api']], function () {
      /** Dashboard*/
     /** User Folder Access */
     Route::namespace('User')->group(function () {

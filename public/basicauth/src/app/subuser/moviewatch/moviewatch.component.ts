@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MovieService } from 'src/app/user/movie.service';
 
 @Component({
   selector: 'app-moviewatch',
@@ -8,13 +9,14 @@ import { Component, OnInit } from '@angular/core';
 export class MoviewatchComponent implements OnInit {
   movies:any;
   
-  constructor() { }
+  constructor(private moviesService:MovieService) { }
 
   ngOnInit(): void {
-    this.movies = [
-      {moviename:"",movieurl:"https://material.angular.io/assets/img/examples/shiba2.jpg",moviedes:""},
-      {moviename:"",movieurl:"https://material.angular.io/assets/img/examples/shiba2.jpg",moviedes:""}
-    ]
+    this.moviesService.getusermovies().subscribe(res=>{
+      this.movies =  Object(res).result.movies;
+    })
   }
-
+/**
+      {moviename:"",movieurl:"https://material.angular.io/assets/img/examples/shiba2.jpg",moviedes:""},
+      {moviename:"",movieurl:"https://material.angular.io/assets/img/examples/shiba2.jpg",moviedes:""} */
 }

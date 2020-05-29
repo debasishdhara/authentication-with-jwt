@@ -3,4 +3,5 @@ export interface Movies {
     movie_description:String,
     movie_poster:String,
     active:Boolean,
+    id:BigInteger,
 }

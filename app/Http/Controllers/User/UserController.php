@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\UsermovieResource;
 use Carbon\Carbon;
+use App\Movie;
 
 class UserController extends Controller
 {
@@ -22,10 +24,19 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware('user');
     }
 
     public function showMovie(){
-
+        $movies = Movie::all();
+        return response()->json([
+            "serverResponse" => [
+                "code" => 200,
+                "message" => "Movies Fetched Successfully",
+                "isSuccess" => true
+            ],
+            "result" => [
+                "movies" => UsermovieResource::collection($movies)
+            ]
+            ]);
     }
 }
