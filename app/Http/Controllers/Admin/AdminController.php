@@ -83,7 +83,19 @@ class AdminController extends Controller
             }
         }
     }
-
+    public function editMoviedetails(Request $request){
+        $movies = Movie::find($request->id);
+        return response()->json([
+            "serverResponse" => [
+                "code" => 200,
+                "message" => "Movies Fetched Successfully",
+                "isSuccess" => true
+            ],
+            "result" => [
+                "movies" => new MoviesResource($movies)
+            ]
+            ]);
+    }
     public function editMovie(Request $request){
         $validator = Validator::make($request->all(), [
             'movie_name' => 'required|string',

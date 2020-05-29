@@ -25,6 +25,7 @@
           </mat-form-field>
           <div class="full-width-input">
             <input type="file" id="fileUpload" formControlName="movie_poster" name="fileUpload" accept="image/*" (change)="onFileChange($event)"/>
+            <img mat-card-image [src]="movie_posternew" alt="Photo of Poster" style="width: 100px;height: 100px;" width="100" height="100"/>
          </div>
          <mat-form-field class="full-width-input">
    

@@ -13,6 +13,9 @@ export class MovieComponent implements OnInit {
 
   }
   ngOnInit() {
+    this.onlo();
+  }
+  onlo(){
     this.movieService.getmovies().subscribe(res=>{
       this.dataSource = Object(res).result.movies;
     })
@@ -22,7 +25,10 @@ export class MovieComponent implements OnInit {
       this.router.navigate(['user/movieedit'], { queryParams: { id: i } });
   }
   deleten(i){
-    
+    this.movieService.deletemovie(i).subscribe(res=>{
+      this.onlo();
+      this.router.navigate(['user/movielist']);
+    })
   }
   add(){
     this.router.navigate(['user/moviecreate']);

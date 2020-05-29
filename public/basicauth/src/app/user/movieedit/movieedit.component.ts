@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { MovieService } from '../movie.service';
 
 @Component({
@@ -10,6 +10,9 @@ import { MovieService } from '../movie.service';
 })
 export class MovieeditComponent implements OnInit {
   form: FormGroup;
+  movie_posternew:any='';
+  params: Params;
+  movie_id:any;
   fileToUpload: File = null;
   public loginInvalid: boolean;
   private formSubmitAttempt: boolean;
@@ -25,9 +28,30 @@ export class MovieeditComponent implements OnInit {
   async ngOnInit() {
     this.form = this.fb.group({
       movie_name: ['', Validators.required],
-      movie_poster: ['', Validators.required],
       movie_description:['', Validators.required]
     });
+    this.route.queryParams.subscribe((params: Params) => {
+       this.params = params;
+      // console.log('App params', params);
+      const id = params['id'];
+      // console.log('id', id);
+      this.movie_id = id;
+      this.editpage(id);
+    });
+  }
+  editpage(i) {
+    this.movieService.editmovieentry(i).subscribe(
+      res => {
+        console.log(res);
+        this.form.patchValue({movie_name:Object(res).result.movies.movie_name});
+        this.form.patchValue({movie_description:Object(res).result.movies.movie_description});
+        this.movie_posternew=Object(res).result.movies.images;
+        this.movie_id = Object(res).result.movies.id;
+      },
+      err => {
+        this.router.navigate(['user/movielist']);
+      }
+  );
   }
   onFileChange(event) {
     let reader = new FileReader();
@@ -65,7 +89,7 @@ export class MovieeditComponent implements OnInit {
         //   movie_poster:movie_poster,
         //   movie_description:movie_description
         // };
-        await this.movieService.newmovieentry(data).subscribe(
+        await this.movieService.editmovie(data,this.movie_id).subscribe(
           res => {
             this.router.navigate(['user/movielist']);
           },
