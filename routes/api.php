@@ -34,7 +34,7 @@ Route::group(['middleware' => ['auth:api','admin']], function () {
     Route::namespace('Admin')->group(function () {
         Route::post('/moviecreate', 'AdminController@createMovie')->name('create-api-movie');
         Route::post('/movieedit/{id}', 'AdminController@editMovie')->name('edit-api-movie');
-        Route::delete('/movieedit/{id}', 'AdminController@deleteMovie')->name('edit-api-movie');
+        Route::delete('/moviedelete/{id}', 'AdminController@deleteMovie')->name('edit-api-movie');
         Route::get('/movielist', 'AdminController@showMovielist')->name('list-api-movie');
     });
 });
