@@ -78,7 +78,7 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-## Run This  Project As Followes 
+## Run This  Project As Follow
 Install Xammp 
 Open cmd on htdocs 
 git clone https://github.com/debasishdhara/authentication-with-jwt.git
