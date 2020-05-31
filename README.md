@@ -92,7 +92,8 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 - php artisan jwt:secret
 - php artisan key:generate
-- php artisan migrate --seed
+- php artisan migrate 
+- php artisan db:seed
 
 ## Front-end Angular
 - cd public/basicauth
