@@ -78,6 +78,33 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
+## Run This  Project As Followes 
+Install Xammp 
+Open cmd on htdocs 
+git clone https://github.com/debasishdhara/authentication-with-jwt.git
 
-## run 
+cd authentication-with-jwt
+
+## Backend Laravel
+composer install
+npm i
+Setup .env as per your config mysql
+
 php artisan jwt:secret
+php artisan key:generate
+php artisan migrate --seed
+
+## Front-end Angular
+cd public/basicauth
+npm i
+ng serve
+
+## running 
+
+Laravel Simple View:
+http://localhost/authentication-with-jwt/public
+
+Angular View:
+http://localhost:4200
+
+
